@@ -18,11 +18,10 @@ Provides a stable experience and optionally bleeding edge.
 ## Installation
 
 Its just a file. It is up 2 you, to decide what which way
-solves your problem the best.
+solves your problem the best.  
 You can use it as a git submodule, fetch the latest version at runtime using `curl`
-or `wget`.
-Honestly possibilities are alot.
-I personally just copy the file contents and put it it my git repo.
+or `wget`.  
+I personally just copy the file contents and put it it my git repo.  
 Can't bother with git submodules. I do this for two repositories currently.
 
 ## Dependencies
