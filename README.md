@@ -4,13 +4,13 @@ This has been created by me, within [ribynlinux - my dotfiles repository](https:
 I was re-inventing the wheel over and over to build several apps from source,
 while providing upgrading/downgrading mechanisms across multiple machines using
 my dotfiles repository.
-Overtime this reuseable script came to be.
+Over time this reuseable script came to be.
 
 You can use it to build apps, which are not packaged in your distro's
 package manager. Examples:
 
 - [neovim](https://github.com/neovim/neovim),
-- [hyprland](https://github.com/pythops/bluetui)
+- [hyprland](https://github.com/hyprwm/hyprland)
 - [bluetui](https://github.com/pythops/bluetui),
 - and any other git repository
 
@@ -24,17 +24,16 @@ for a programm which you want to build from source.
 
 ## Requirements
 
-Basic programming skills will be helpful, since I dont have the time to make a
+Basic programming skills will be helpful, since I don't have the time to make a
 guide, for how to make a dotfiles repository with shell scripts and git.
-There are guide for this online, so I consider it be out of scope for this script.
+There are guide for this online, so I consider it to be out of scope for this script.
 It's still possible to integrate it for those without this knowledge, using vibe
 coding or learn the fundamentals on what is needed.
 
-depends on `git` to be in your `PATH`.  
+Depends on `git` to be in your `PATH`.  
 You most likely have this installed already.
 
-if not, install git
-
+**If not, install git:**
 ```sh
 # for fedora
 sudo dnf install git
@@ -47,7 +46,7 @@ sudo pacman -S git
 
 ### How to use or install
 
-Its just a file. It is up 2 you, to decide what which way
+It is only one file. It is up to you, to decide which way
 solves your problem the best.  
 You can use it as a git submodule, fetch the latest version at runtime using `curl`
 or `wget`.  
@@ -56,7 +55,7 @@ Can't bother with git submodules. I do this for two repositories currently.
 
 The script is very small you could just read through it.
 You should not execute random scripts from the internet anyways.
-Regardless, here some examples on how to use it.
+Regardless, here are some examples on how to use it.
 
 **How to write your own installation shell script (using neovim+fedora as example):**
 ```sh
@@ -69,8 +68,8 @@ set -euo pipefail
 sudo dnf -y install ninja-build cmake gcc make gettext curl glibc-gconv-extra git
 
 # Optionally, before sourcing sourcerer.sh
-# this is the directoy, all git repositories will be cloned
-# into and builded. I recommended to use your dotfiles repo
+# this is the directory, all git repositories will be cloned
+# into and built. I recommended to use your dotfiles repo
 # name, or your linux username. My username is ribyn
 # if not provided, sourcerer will fallback to $HOME/.local/share/sourcerer
 # means neovim will be git cloned to $HOME/.local/share/sourcerer/neovim
@@ -83,7 +82,7 @@ source "$HOME/mydotfiles/path-to/sourcerer.sh"
 # this will be called by sourcerer.
 function neovim_build_and_install() {
   # this contains the build and install instructions these are usually code
-  # snippets mentioned in the README.md of the app you with to install
+  # snippets mentioned in the README.md of the app you wish to install
   make CMAKE_BUILD_TYPE=RelWithDebInfo
   sudo make install
 }
@@ -93,21 +92,21 @@ function neovim_build_and_install() {
 function neovim_installed() {
   # return an exit code, for whether or not the app is already installed
   command -v nvim >/dev/null 2>&1
-  # some git repositories dont install an app which provides a command.
+  # some git repositories don't install a programm which provides a command.
   # for example hyprpolkitagent which is required for permissions in hyprland
   # could check like this
   # [[ -x "/usr/libexec/hyprpolkitagent" ]]
-  # or hyprland protocols which is requierd to build hyprland:
+  # or hyprland protocols which is required to build hyprland:
   # pkg-config --exists $SOURCE_NAME
-  # more examples availabe in hyribyn: https://github.com/RobinMeow/hyribyn
+  # more examples available in hyribyn: https://github.com/RobinMeow/hyribyn
 }
 # the first argument "neovim" is <appname> for the functions above
-# the second argument in the git revision. This can be a remote branch
+# the second argument is the git revision. This can be a remote branch
 # e.g. origin/master or a git tag (v0.12.5 is a git tag here) or a commit hash
 # It is recommended to not hardcode it, but use environment variables
 # exported in your .zshenv (or .zshrc or .bashrc) and read them here
 # which makes it easy, to upgrade/downgrade by changing its value,
-# and re-run this script. instead of changig this script itself.
+# and re-run this script. instead of changing this script itself.
 check_source_state "neovim" "v0.12.5"
 source_git "https://github.com/neovim/neovim"
 ```
@@ -115,6 +114,9 @@ source_git "https://github.com/neovim/neovim"
 now the first time you run this script, it will git clone neovim,
 build and install it.
 if you re-run it, it will log "already installed", unless you
+change the git revision, to upgrade or downgrade.
+you can also remove the git repo from your filesystem, to force
+a rebuild on the same git revision.
 
 next up a real example for neovim:
 
@@ -150,10 +152,10 @@ hyribyn uses this to build hyprland, and optional apps like,
 
 ## philosophy
 
-Idemptency. This is supposed to be used for dotfile repos.
+Idempotency. This is supposed to be used for dotfile repos.
 And maybe does many changes per day, and frequently re-runs
 install and syncing scripts. So it should support that, without
 re-installing, re-cloning, etc. on each run.
 this is an extremely small script. This is the kind of git repository
-which will have it "last commit date" 3 years back, and still works.
+which will have its "last commit date" 3 years back, and still works.
 it does one thing, and does it well.
