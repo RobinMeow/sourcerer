@@ -1,5 +1,9 @@
 # sourcerer
 
+automate build from source programms, apps, protocols with upgrade,
+downgrade, bleeding edge latest with auto-update functionalities,
+with less boilerplate code, while maintaining a consistent code base.
+
 This has been created by me, within [ribynlinux - my dotfiles repository](https://github.com/RobinMeow/ribynlinux)
 I was re-inventing the wheel over and over to build several apps from source,
 while providing upgrading/downgrading mechanisms across multiple machines using
