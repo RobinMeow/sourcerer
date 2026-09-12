@@ -112,6 +112,10 @@ check_source_state "neovim" "v0.12.5"
 source_git "https://github.com/neovim/neovim"
 ```
 
+now the first time you run this script, it will git clone neovim,
+build and install it.
+if you re-run it, it will log "already installed", unless you
+
 next up a real example for neovim:
 
 ### real world small scale examples: Neovim

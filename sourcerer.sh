@@ -1,13 +1,31 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+NC="\033[0m" # No Color
+
+RED="\033[38;5;203m" # #f38ba8
+error() {
+	echo -e "${RED}[ERROR]${NC} $*"
+}
+
+# ORANGE="\033[38;5;215m" # #fab387
+# warn() {
+# 	echo -e "${ORANGE}[WARN]${NC} $*"
+# }
+
+# GREEN="\033[38;5;114m"  # #a6e3a1
+# success() {
+# 	echo -e "${GREEN}[SUCCESS]${NC} $*"
+# }
+
+BLUE="\033[38;5;109m" # #89b4fa
+info() {
+	echo -e "${BLUE}[INFO]${NC} $*"
+}
+
 SOURCERER_DEST=${SOURCERER_DEST:-"$HOME/.local/share/sourcerer"}
 mkdir -p "$SOURCERER_DEST"
 SOURCE="$SOURCERER_DEST"
-
-# WARN: source-manager.sh expect the SOURCE_NAME to be equal to the SOURCE_DEST
-# I think it would still work when not. but would be more clean
-# also expects the name to match the pkg-config value if used.
 
 function check_source_state() {
 	export SOURCE_NAME=${1:?1st arg SOURCE_NAME is required}
@@ -16,14 +34,12 @@ function check_source_state() {
 
 	if [[ -d "$SOURCE_DEST" ]]; then
 		# quick and dirty, fetch everything, so we dont have to bother with origin/checks
-		# do not ues --jobs=10. which will cause gh rate limits to block my requests.
-		# then it will prompt for a login to fetch/clone anything..
-		# even tho, I did not exceed the rate limit
+		# do not use --jobs=10. which will cause gh rate limits to block (not logged in) requests in rare occasions.
 		git -C "$SOURCE_DEST" fetch --all --tags --prune
 
 		if [[ "$SOURCE_GITREV" == "latest-tag" ]]; then
-			# apparently my solution gets the latest tag, using git tag aware versioning.
-			# to to use the latest git tag, based on commit dates, you can use this:
+			# my solution gets the latest tag, using git tag aware versioning.
+			# to to use the latest git tag, based on commit dates, you can use this instead:
 			# git describe --tags $(git rev-list --tags --max-count=1)
 			SOURCE_GITREV=$(git -C "$SOURCE_DEST" tag --sort=v:refname | tail -n 1)
 			info "latest tag is: $SOURCE_GITREV"
@@ -45,9 +61,6 @@ function clean_source() {
 	# NOTE: has to be called after check_source_state
 	# in order for SOURCE_DEST to be set
 
-	# -d recurse into directories
-	# -x remove all untracked files (ignoring gitignore rules)
-
 	(
 		cd "$SOURCE_DEST"
 		# moving staged modifcations to unstaged
@@ -59,6 +72,8 @@ function clean_source() {
 		git submodule foreach --recursive git checkout .
 
 		# removing build and other cache files
+		# -d recurse into directories
+		# -x remove all untracked files (ignoring gitignore rules)
 		git clean -fdx
 		git submodule foreach --recursive git clean -fdx
 	)
@@ -68,13 +83,11 @@ function init_source() {
 	giturl=$1
 
 	if [[ "${SOURCE_STATE:-"unset"}" == "unset" ]]; then
-		source "$RIBYN_ROOT/core/utils.sh"
 		error "incorrect use of init_source. call check_source_state before initilasing."
 		exit 1
 	fi
 
 	if [[ "$SOURCE_STATE" != "source n/a" ]]; then
-		source "$RIBYN_ROOT/core/utils.sh"
 		error "source already exists. cannot initialize."
 		exit 1
 	fi
@@ -90,17 +103,14 @@ function init_source() {
 
 function update_source() {
 	if [[ "${SOURCE_STATE:-"unset"}" == "unset" ]]; then
-		source "$RIBYN_ROOT/core/utils.sh"
 		error "incorrect use of update_source. call check_source_state before updating."
 		exit 1
 	fi
 
 	if [[ "$SOURCE_STATE" == "source n/a" ]]; then
-		source "$RIBYN_ROOT/core/utils.sh"
 		error "source does not exist. cannot update."
 		exit 1
 	elif [[ "$SOURCE_STATE" == "gitrev equals" ]]; then
-		source "$RIBYN_ROOT/core/utils.sh"
 		error "source is already at requested gitrev. no reason to update."
 		exit 1
 	fi
