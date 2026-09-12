@@ -16,21 +16,19 @@ package manager. Examples:
 
 Provides a stable experience and optionally bleeding edge.
 
-### Who this is not for
+**Who this is not for:**
+If you just want to build from source once, this is not for you.
+Think of this as a tool, to help you write a script, to automate the installation
+for multiple machines, distros, reproductions, or getting auto-update functionality
+for a programm which you want to build from source.
 
-If you just want to build from source once, this is not for your.
-This is a script to be used for automation purposes. e.g. dotfile repository
-which build neovim from source and updates it, or rolls back as needed.
-
-### Requirements
+## Requirements
 
 Basic programming skills will be helpful, since I dont have the time to make a
 guide, for how to make a dotfiles repository with shell scripts and git.
 There are guide for this online, so I consider it be out of scope for this script.
 It's still possible to integrate it for those without this knowledge, using vibe
 coding or learn the fundamentals on what is needed.
-
----
 
 depends on `git` to be in your `PATH`.  
 You most likely have this installed already.
@@ -56,12 +54,50 @@ or `wget`.
 I personally just copy the file contents and put it it my git repo.  
 Can't bother with git submodules. I do this for two repositories currently.
 
-
 The script is very small you could just read through it.
 You should not execute random scripts from the internet anyways.
 Regardless, here some examples on how to use it.
 
-### Example: Neovim
+**How to write your own installation shell script (using neovim+fedora as example):**
+```sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+# install the dependencies you need to build and install the app.
+# neovim mentions this here: https://github.com/neovim/neovim/blob/stable/BUILD.md#build-prerequisites
+# which is linked in their README.md
+sudo dnf -y install ninja-build cmake gcc make gettext curl glibc-gconv-extra git
+
+# source the sourcerer.sh file from this repo
+# to make its functions available in this script
+source "$HOME/mydotfiles/path-to/sourcerer.sh"
+
+# define a function named <appname>_build_and_install
+# this will be called by sourcerer.
+function neovim_build_and_install() {
+  # this contains the build and install instructions these are usually code
+  # snippets mentioned in the README.md of the app you with to install
+}
+
+# define a function named <appname>_installed
+# this will be called by sourcerer.
+function neovim_installed() {
+  # return an exit code, for whether or not the app is already installed
+}
+# the first argument "neovim" is <appname> for the functions above
+# the second argument in the git revision. This can be a remote branch
+# e.g. origin/master or a git tag (v0.12.5 is a git tag here) or a commit hash
+# It is recommended to not hardcode it, but use environment variables
+# exported in your .zshenv (or .zshrc or .bashrc) and read them here
+# which makes it easy, to upgrade/downgrade by changing its value,
+# and return this script
+check_source_state "neovim" "v0.12.5"
+source_git "https://github.com/neovim/neovim"
+```
+
+next up a real example for neovim:
+
+### real world small scale examples: Neovim
 
 [build nvim from source on fedora in 14 lines of code](./examples/build-nvim-from-source-on-fedora.sh)
 [build nvim from source on fedora in 14 lines of code - with comments](./examples/build-nvim-from-source-on-fedora-with-comments.sh)
@@ -79,7 +115,7 @@ Shows _(and explains in the comments)_ some problems which sourcerer solves.
 > This is a bit more complex, becuase my dotfiles support arch and fedora.
 Also I can toggle my configuration between from-source-build and packaged bin installation.
 
-### Example: hyribyn - hyprland from source for any distro
+### real world large scale example: hyribyn - hyprland from source for any distro
 
 hyribyn uses this to build hyprland, and optional apps like,
 `hyprshutdown`, `hyprlock`, etc.. from source.

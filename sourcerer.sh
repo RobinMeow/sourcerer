@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-mkdir -p "$HOME/.local/share/ribyn"
-SOURCE="$HOME/.local/share/ribyn"
+SOURCERER_DEST=${SOURCERER_DEST:-"$HOME/.local/share/sourcerer"}
+mkdir -p "$SOURCERER_DEST"
+SOURCE="$SOURCERER_DEST"
 
 # WARN: source-manager.sh expect the SOURCE_NAME to be equal to the SOURCE_DEST
 # I think it would still work when not. but would be more clean
