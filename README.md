@@ -31,9 +31,13 @@ depends on `git` to be in your `PATH`.
 You most likely have this installed already.
 
 if not, install git
+
 ```sh
-# substitute `dnf` with the package manager which comes bundled in your distro
+# for fedora
 sudo dnf install git
+# for arch
+sudo pacman -S git
+# all distros have git. just google the command if you don't know it.
 ```
 
 ## Getting Started
@@ -42,55 +46,20 @@ the script is very small you could just read through it.
 
 ### Example: Neovim
 
-`build-nvim-from-source-fedora.sh`
-```sh
-#!/bin/bash
-set -euo pipefail
-
-source "path/to/sourcerer.sh"
-
-# NOTE: use this before building,
-# if I have issue and git clean -fdx is not enough
-# sudo make clean distclean
-
-# i copied this from my own dotfiles repo
-# could be, not all of these are neovim dependencies
-# but deps of a plugin I use. e.g. lazy-nvim
-sudo dnf --assumeyes install \
-  ninja-build \
-  cmake \
-  gcc \
-  make \
-  unzip \
-  gettext \
-  curl
-
-function neovim_build_and_install() {
-  make CMAKE_BUILD_TYPE="RelWithDebInfo"
-  sudo make install
-}
-function neovim_installed() {
-  command -v nvim >/dev/null 2>&1
-}
-source "$RIBYN_ROOT/core/source-manager.sh"
-# will only ever upgrade/downgrade if you change this value.
-# or you can override this in your .zshrc/.bashrc.
-# Example: if you want to stay on bleeding edge development:
-# export NVIM_GITREF="origin/master"
-# Example: update to latest stable
-# export NVIM_GITREF="origin/stable"
-NVIM_GITREF=${NVIM_GITREF:-"v0.12.5"}
-check_source_state "neovim" "$NVIM_GITREF"
-source_git "https://github.com/neovim/neovim"
-```
-
+[build nvim from source on fedora in 14 lines of code](./examples/build-nvim-from-source-on-fedora.sh)
+[build nvim from source on fedora in 14 lines of code - with comments](./examples/build-nvim-from-source-on-fedora-with-comments.sh)
 > Important: updates never happen automatically, nothing is running in the background.
 You have to invoke `build-nvim-from-source-fedora.sh` to update. And only then,
 it will check for available updates. Which makes it suitable to put it into your
 dotfiles repository.
 
-Just for comparison, what sourcerer solves. [Here is an old version of my neovim
-from source build](./examples/build-neovim-from-source-arch.sh), which was not reuseable for other git repos.
+[Here is an old version of my neovim from source build without sourcerer](./examples/build-nvim-from-without-sourcerer.sh),
+Which was not reuseable for other git repos.
+Shows (and explains in the comments) some examples which problems, sourcerer solves.
+
+[Example of my dotfiles repo, which uses this](https://github.com/RobinMeow/ribynlinux/tree/master/lib/nvim)
+> This is a bit more complex, becuase my dotfiles support arch and fedora.
+Also I can toggle my configuration between from-source-build and packaged bin installation.
 
 ### Example: hyribyn - hyprland from source for any distro
 
