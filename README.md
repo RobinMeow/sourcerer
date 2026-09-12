@@ -118,16 +118,15 @@ change the git revision, to upgrade or downgrade.
 you can also remove the git repo from your filesystem, to force
 a rebuild on the same git revision.
 
-next up a real example for neovim:
+next up a real-world examples for neovim:
 
-### real world small scale examples: Neovim
+### real world small scale examples for neovim
 
 [build nvim from source on fedora in 14 lines of code](./examples/build-nvim-from-source-on-fedora.sh)
 [build nvim from source on fedora in 14 lines of code - with comments](./examples/build-nvim-from-source-on-fedora-with-comments.sh)
 > Important: updates never happen automatically, nothing is running in the background.
-You have to invoke `build-nvim-from-source-fedora.sh` to update. And only then,
-it will check for available updates. Which makes it suitable to put it into your
-dotfiles repository.
+You have to invoke the script to update. And only then, it will check for available
+updates. Which makes it suitable to put it into your dotfiles repository.
 
 [bad example without sourcerer - nvim from source build](./examples/build-nvim-from-without-sourcerer.sh)  
 This one is a past version of my dotfiles repo,
@@ -140,9 +139,10 @@ Also I can toggle my configuration between from-source-build and packaged bin in
 
 ### real world large scale example: hyribyn - hyprland from source for any distro
 
-hyribyn uses this to build hyprland, and optional apps like,
-`hyprshutdown`, `hyprlock`, etc.. from source.
-[hyribyn](https://github.com/RobinMeow/hyribyn)
+[hyribyn](https://github.com/RobinMeow/hyribyn) uses the `sourcerer` to
+build the whole hyprland stack from source as well as commonly used programs like
+hyprlock and hyprshutdown.
+Which makes a total of 19 git repositories to build from source.
 
 ## Contributing
 
@@ -150,7 +150,7 @@ hyribyn uses this to build hyprland, and optional apps like,
 - only submit a pull request after having a prior issue or discussion
 - keep PRs small and focused
 
-## philosophy
+## Philosophy
 
 Idempotency. This is supposed to be used for dotfile repos.
 And maybe does many changes per day, and frequently re-runs
