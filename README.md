@@ -2,10 +2,11 @@
 
 This has been created by me, within [ribynlinux - my dotfiles repository](https://github.com/RobinMeow/ribynlinux)
 I was re-inventing the wheel over and over to build several apps from source,
-while providing updating/downgrading mechanisms.
+while providing upgrading/downgrading mechanisms across multiple machines using
+my dotfiles repository.
 Overtime this reuseable script came to be.
 
-You can use it to build apps, which arent packages in your distros
+You can use it to build apps, which are not packaged in your distro's
 package manager. Examples:
 
 - [neovim](https://github.com/neovim/neovim),
@@ -15,16 +16,21 @@ package manager. Examples:
 
 Provides a stable experience and optionally bleeding edge.
 
-## Installation
+### Who this is not for
 
-Its just a file. It is up 2 you, to decide what which way
-solves your problem the best.  
-You can use it as a git submodule, fetch the latest version at runtime using `curl`
-or `wget`.  
-I personally just copy the file contents and put it it my git repo.  
-Can't bother with git submodules. I do this for two repositories currently.
+If you just want to build from source once, this is not for your.
+This is a script to be used for automation purposes. e.g. dotfile repository
+which build neovim from source and updates it, or rolls back as needed.
 
-## Dependencies
+### Requirements
+
+Basic programming skills will be helpful, since I dont have the time to make a
+guide, for how to make a dotfiles repository with shell scripts and git.
+There are guide for this online, so I consider it be out of scope for this script.
+It's still possible to integrate it for those without this knowledge, using vibe
+coding or learn the fundamentals on what is needed.
+
+---
 
 depends on `git` to be in your `PATH`.  
 You most likely have this installed already.
@@ -41,7 +47,19 @@ sudo pacman -S git
 
 ## Getting Started
 
-the script is very small you could just read through it.
+### How to use or install
+
+Its just a file. It is up 2 you, to decide what which way
+solves your problem the best.  
+You can use it as a git submodule, fetch the latest version at runtime using `curl`
+or `wget`.  
+I personally just copy the file contents and put it it my git repo.  
+Can't bother with git submodules. I do this for two repositories currently.
+
+
+The script is very small you could just read through it.
+You should not execute random scripts from the internet anyways.
+Regardless, here some examples on how to use it.
 
 ### Example: Neovim
 
@@ -52,9 +70,10 @@ You have to invoke `build-nvim-from-source-fedora.sh` to update. And only then,
 it will check for available updates. Which makes it suitable to put it into your
 dotfiles repository.
 
-[Here is an old version of my neovim from source build without sourcerer](./examples/build-nvim-from-without-sourcerer.sh),
-Which was not reuseable for other git repos.
-Shows (and explains in the comments) some examples which problems, sourcerer solves.
+[nvim from source build without sourcerer](./examples/build-nvim-from-without-sourcerer.sh)  
+This one is a past version of my dotfiles repo,
+which was not reuseable for other git repos.  
+Shows _(and explains in the comments)_ some problems which sourcerer solves.
 
 [Example of my dotfiles repo, which uses this](https://github.com/RobinMeow/ribynlinux/tree/master/lib/nvim)
 > This is a bit more complex, becuase my dotfiles support arch and fedora.
