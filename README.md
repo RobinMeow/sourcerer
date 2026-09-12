@@ -68,6 +68,13 @@ set -euo pipefail
 # which is linked in their README.md
 sudo dnf -y install ninja-build cmake gcc make gettext curl glibc-gconv-extra git
 
+# Optionally, before sourcing sourcerer.sh
+# this is the directoy, all git repositories will be cloned
+# into and builded. I recommended to use your dotfiles repo
+# name, or your linux username. My username is ribyn
+# if not provided, sourcerer will fallback to $HOME/.local/share/sourcerer
+# means neovim will be git cloned to $HOME/.local/share/sourcerer/neovim
+export SOURCERER_DEST="$HOME/.local/share/ribyn"
 # source the sourcerer.sh file from this repo
 # to make its functions available in this script
 source "$HOME/mydotfiles/path-to/sourcerer.sh"
@@ -77,12 +84,22 @@ source "$HOME/mydotfiles/path-to/sourcerer.sh"
 function neovim_build_and_install() {
   # this contains the build and install instructions these are usually code
   # snippets mentioned in the README.md of the app you with to install
+  make CMAKE_BUILD_TYPE=RelWithDebInfo
+  sudo make install
 }
 
 # define a function named <appname>_installed
 # this will be called by sourcerer.
 function neovim_installed() {
   # return an exit code, for whether or not the app is already installed
+  command -v nvim >/dev/null 2>&1
+  # some git repositories dont install an app which provides a command.
+  # for example hyprpolkitagent which is required for permissions in hyprland
+  # could check like this
+  # [[ -x "/usr/libexec/hyprpolkitagent" ]]
+  # or hyprland protocols which is requierd to build hyprland:
+  # pkg-config --exists $SOURCE_NAME
+  # more examples availabe in hyribyn: https://github.com/RobinMeow/hyribyn
 }
 # the first argument "neovim" is <appname> for the functions above
 # the second argument in the git revision. This can be a remote branch
@@ -90,7 +107,7 @@ function neovim_installed() {
 # It is recommended to not hardcode it, but use environment variables
 # exported in your .zshenv (or .zshrc or .bashrc) and read them here
 # which makes it easy, to upgrade/downgrade by changing its value,
-# and return this script
+# and re-run this script. instead of changig this script itself.
 check_source_state "neovim" "v0.12.5"
 source_git "https://github.com/neovim/neovim"
 ```
@@ -106,7 +123,7 @@ You have to invoke `build-nvim-from-source-fedora.sh` to update. And only then,
 it will check for available updates. Which makes it suitable to put it into your
 dotfiles repository.
 
-[nvim from source build without sourcerer](./examples/build-nvim-from-without-sourcerer.sh)  
+[bad example without sourcerer - nvim from source build](./examples/build-nvim-from-without-sourcerer.sh)  
 This one is a past version of my dotfiles repo,
 which was not reuseable for other git repos.  
 Shows _(and explains in the comments)_ some problems which sourcerer solves.
