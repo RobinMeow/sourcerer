@@ -54,8 +54,9 @@ It is only one file. It is up to you, to decide which way
 solves your problem the best.  
 You can use it as a git submodule, fetch the latest version at runtime using `curl`
 or `wget`.  
-I personally just copy the file contents and put it it my git repo.  
-Can't bother with git submodules. I do this for two repositories currently.
+In my [dotfiles repo](https://github.com/RobinMeow/ribynlinux)
+I manage a copy, and in [hyribyn](https://github.com/RobinMeow/hyribyn)
+I use git submodules.
 
 The script is very small you could just read through it.
 You should not execute random scripts from the internet anyways.
