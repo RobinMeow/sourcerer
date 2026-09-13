@@ -4,9 +4,8 @@ set -euo pipefail
 NC="\033[0m" # No Color
 
 RED="\033[38;5;203m" # #f38ba8
-# TODO: check if these get exposed to the sourcing scripts
-# if they do, rename to more uniquely like sourcerer_error if they do
-error() {
+
+sourcerer_error() {
 	echo -e "${RED}[ERROR]${NC} $*"
 }
 
@@ -21,7 +20,7 @@ error() {
 # }
 
 BLUE="\033[38;5;109m" # #89b4fa
-info() {
+sourcerer_info() {
 	echo -e "${BLUE}[INFO]${NC} $*"
 }
 
@@ -43,7 +42,7 @@ function check_source_state() {
 			# to to use the latest git tag, based on commit dates, you can use this instead:
 			# git describe --tags $(git rev-list --tags --max-count=1)
 			SOURCE_GITREV=$(git -C "$SOURCE_DEST" tag --sort=v:refname | tail -n 1)
-			info "latest tag is: $SOURCE_GITREV"
+			sourcerer_info "latest tag is: $SOURCE_GITREV"
 		fi
 
 		requested_commit=$(git -C "$SOURCE_DEST" rev-parse "$SOURCE_GITREV^{commit}")
@@ -84,16 +83,16 @@ function init_source() {
 	giturl=$1
 
 	if [[ "${SOURCE_STATE:-"unset"}" == "unset" ]]; then
-		error "incorrect use of init_source. call check_source_state before initilasing."
+		sourcerer_error "incorrect use of init_source. call check_source_state before initilasing."
 		exit 1
 	fi
 
 	if [[ "$SOURCE_STATE" != "source n/a" ]]; then
-		error "source already exists. cannot initialize."
+		sourcerer_error "source already exists. cannot initialize."
 		exit 1
 	fi
 
-	info "[$SOURCE_NAME] initialising..."
+	sourcerer_info "[$SOURCE_NAME] initialising..."
 	git clone "$giturl" "$SOURCE_DEST"
 	(
 		cd "$SOURCE_DEST"
@@ -104,15 +103,15 @@ function init_source() {
 
 function update_source() {
 	if [[ "${SOURCE_STATE:-"unset"}" == "unset" ]]; then
-		error "incorrect use of update_source. call check_source_state before updating."
+		sourcerer_error "incorrect use of update_source. call check_source_state before updating."
 		exit 1
 	fi
 
 	if [[ "$SOURCE_STATE" == "source n/a" ]]; then
-		error "source does not exist. cannot update."
+		sourcerer_error "source does not exist. cannot update."
 		exit 1
 	elif [[ "$SOURCE_STATE" == "gitrev equals" ]]; then
-		error "source is already at requested gitrev. no reason to update."
+		sourcerer_error "source is already at requested gitrev. no reason to update."
 		exit 1
 	fi
 
@@ -145,21 +144,21 @@ function source_git() {
 
 	if [[ "$SOURCE_STATE" == "source n/a" ]]; then
 		init_source "$giturl"
-		info "[$SOURCE_NAME] installing..."
+		sourcerer_info "[$SOURCE_NAME] installing..."
 		(cd "$SOURCE_DEST" && "$build_and_install")
 	elif [[ "$SOURCE_STATE" == "gitrev equals" ]]; then
 		if $is_installed; then
-			info "$SOURCE_NAME already installed. Skipping."
+			sourcerer_info "$SOURCE_NAME already installed. Skipping."
 		else
 			# edge case. means its already cloned, but build probably failed
 			clean_source
-			info "[$SOURCE_NAME] installing..."
+			sourcerer_info "[$SOURCE_NAME] installing..."
 			(cd "$SOURCE_DEST" && "$build_and_install")
 		fi
 	elif [[ "$SOURCE_STATE" == "gitrev differs" ]]; then
 		clean_source
 		update_source "$giturl"
-		info "[$SOURCE_NAME] updating..."
+		sourcerer_info "[$SOURCE_NAME] updating..."
 		(cd "$SOURCE_DEST" && "$build_and_install")
 	fi
 }
