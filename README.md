@@ -169,3 +169,10 @@ re-installing, re-cloning, etc. on each run.
 this is an extremely small script. This is the kind of git repository
 which will have its "last commit date" 3 years back, and still works.
 it does one thing, and does it well.
+
+## Limitation
+
+- if source name `<appname>` contains spaces, you can't use source_git and
+  have to use the alternative way of calling the other functions.
+  I think zsh allows this, but I don't want to depend on zsh.
+  most repos use dashes so `hyprland-protocols_build_and_install` works just fine

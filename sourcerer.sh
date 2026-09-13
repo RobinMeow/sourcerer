@@ -4,6 +4,8 @@ set -euo pipefail
 NC="\033[0m" # No Color
 
 RED="\033[38;5;203m" # #f38ba8
+# TODO: check if these get exposed to the sourcing scripts
+# if they do, rename to more uniquely like sourcerer_error if they do
 error() {
 	echo -e "${RED}[ERROR]${NC} $*"
 }
@@ -23,9 +25,8 @@ info() {
 	echo -e "${BLUE}[INFO]${NC} $*"
 }
 
-SOURCERER_DEST=${SOURCERER_DEST:-"$HOME/.local/share/sourcerer"}
-mkdir -p "$SOURCERER_DEST"
-SOURCE="$SOURCERER_DEST"
+SOURCE=${SOURCERER_DEST:-"$HOME/.local/share/sourcerer"}
+mkdir -p "$SOURCE"
 
 function check_source_state() {
 	export SOURCE_NAME=${1:?1st arg SOURCE_NAME is required}
