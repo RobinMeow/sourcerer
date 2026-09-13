@@ -1,8 +1,11 @@
 # sourcerer
 
-automate build from source programms, apps, protocols with upgrade,
+automate build from source programs, apps, protocols with upgrade,
 downgrade, bleeding edge latest with auto-update functionalities,
 with less boilerplate code, while maintaining a consistent code base.
+It's your DIY yoghurt, like yay, paru, trizen, etc.. but it does not
+hide the implementation details. Making you aware of what's
+actually happening under the hood.
 
 This has been created by me, within [ribynlinux - my dotfiles repository](https://github.com/RobinMeow/ribynlinux)
 I was re-inventing the wheel over and over to build several apps from source,
@@ -24,7 +27,7 @@ Provides a stable experience and optionally bleeding edge.
 If you just want to build from source once, this is not for you.
 Think of this as a tool, to help you write a script, to automate the installation
 for multiple machines, distros, reproductions, or getting auto-update functionality
-for a programm which you want to build from source.
+for a program which you want to build from source.
 
 ## Requirements
 
@@ -38,6 +41,7 @@ Depends on `git` to be in your `PATH`.
 You most likely have this installed already.
 
 **If not, install git:**
+
 ```sh
 # for fedora
 sudo dnf install git
@@ -63,6 +67,7 @@ You should not execute random scripts from the internet anyways.
 Regardless, here are some examples on how to use it.
 
 **How to write your own installation shell script (using neovim+fedora as example):**
+
 ```sh
 #!/usr/bin/env bash
 set -euo pipefail
@@ -97,7 +102,7 @@ function neovim_build_and_install() {
 function neovim_installed() {
   # return an exit code, for whether or not the app is already installed
   command -v nvim >/dev/null 2>&1
-  # some git repositories don't install a programm which provides a command.
+  # some git repositories don't install a program which provides a command.
   # for example hyprpolkitagent which is required for permissions in hyprland
   # could check like this
   # [[ -x "/usr/libexec/hyprpolkitagent" ]]
@@ -139,7 +144,7 @@ which was not reuseable for other git repos.
 Shows _(and explains in the comments)_ some problems which sourcerer solves.
 
 [Example of my dotfiles repo, which uses this](https://github.com/RobinMeow/ribynlinux/tree/master/lib/nvim)
-> This is a bit more complex, becuase my dotfiles support arch and fedora.
+> This is a bit more complex, because my dotfiles support arch and fedora.
 Also I can toggle my configuration between from-source-build and packaged bin installation.
 
 ### real world large scale example: hyribyn - hyprland from source for any distro
