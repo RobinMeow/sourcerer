@@ -160,6 +160,9 @@ Which makes a total of 19 git repositories to build from source.
 - only submit a pull request after having a prior issue or discussion
 - keep PRs small and focused
 
+- [ ] make cloning submodules optional
+  (only relevant, if the git repo has submodules, which you do not want to have)
+
 ## Philosophy
 
 Idempotency. This is supposed to be used for dotfile repos.
